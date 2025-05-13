@@ -1,4 +1,5 @@
 # Smart City
 * Ingest data from IOT devices to AWS
 * System Architecture
-  ![image](https://github.com/user-attachments/assets/11676c9f-a2c8-4710-8235-f3464f5d624c)
+![system_architecture](https://github.com/user-attachments/assets/deb389e6-7f80-46e3-96e9-6c05e8ef9649)
+
