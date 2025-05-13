@@ -1,5 +1,21 @@
 version: '3.8'
 
+x-spark-worker-common: &spark-worker-common
+  image: bitnami/spark:3.5.5
+  depends_on:
+    - spark-master
+  restart: on-failure
+  command: spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
+  environment:
+    - SPARK_MODE=worker
+    - SPARK_MASTER_URL=spark://spark-master:7077
+    - SPARK_WORKER_CORES=1
+    - SPARK_WORKER_MEMORY=1g
+  volumes:
+    - ./jobs:/opt/bitnami/spark/jobs
+  networks:
+    - smart_city_network
+
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:7.9.1
@@ -31,6 +47,30 @@ services:
       - kafka_data:/var/lib/kafka
     networks:
       - smart_city_network
+
+  spark-master:
+    image: bitnami/spark:3.5.5
+    container_name: spark-master
+    ports:
+      - "7077:7077"
+      - "8080:8080"
+    restart: on-failure
+    command: spark-class org.apache.spark.deploy.master.Master
+    environment:
+      - SPARK_MODE=master
+      - SPARK_MASTER_HOST=spark-master
+    volumes:
+      - ./jobs:/opt/bitnami/spark/jobs
+    networks:
+      - smart_city_network
+
+  spark-worker-1:
+    <<: *spark-worker-common
+    container_name: spark-worker-1
+
+  spark-worker-2:
+    <<: *spark-worker-common
+    container_name: spark-worker-2
 
 volumes:
   kafka_data:
