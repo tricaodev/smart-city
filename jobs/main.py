@@ -142,7 +142,7 @@ def simulate_journey(producer, device_id):
         produce_data_to_kafka_topic(producer, emergency_data, EMERGENCY_TOPIC)
 
         producer.flush()
-        time.sleep(5)
+        time.sleep(3)
 
 if __name__ == "__main__":
     producer = SerializingProducer({
